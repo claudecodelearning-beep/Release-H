@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+runtime/
+dist/
+outputs/
+work/
+docs/superpowers/
+.DS_Store
+.env
+.env.*
+*.egg-info/
+.pytest_cache/

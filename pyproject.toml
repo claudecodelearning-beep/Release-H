@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "release-h"
+version = "0.2.0"
+description = "One-command setup for a RELEASE H Mac work environment"
+requires-python = ">=3.10"
+
+[project.scripts]
+release-h = "release_h.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+release_h = ["data/*.json", "applescript/*.scpt"]
