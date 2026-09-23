@@ -2,6 +2,10 @@
 
 一条命令恢复 Mac 工作环境，并通过本地蓝牙按下配置好的 SwitchBot Bot。
 
+## 获取完整源码
+
+[下载 RELEASE H v0.2.0 完整源码包](RELEASE-H-source-v0.2.0.zip)。压缩包包含 Python 源码、macOS Agent、安装脚本、测试和文档；不包含本机 Bot 地址、运行日志、虚拟环境或其他私人状态。
+
 ## 功能
 
 - 外接屏：Visual Studio Code、Terminal、备忘录、Codex 各占一个全屏空间。
@@ -32,7 +36,7 @@
 
 ## 安装
 
-下载或克隆仓库，在项目目录执行：
+下载上方完整源码包并解压，在项目目录执行：
 
 ```sh
 chmod +x bin/release-h scripts/*.sh
