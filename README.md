@@ -4,7 +4,7 @@
 
 ## 获取完整源码
 
-[下载 RELEASE H v0.2.0 完整源码包](RELEASE-H-source-v0.2.0.zip)。压缩包包含 Python 源码、macOS Agent、安装脚本、测试和文档；不包含本机 Bot 地址、运行日志、虚拟环境或其他私人状态。
+[下载 RELEASE H 最新完整源码包](RELEASE-H-source-latest.zip)。压缩包包含 Python 源码、macOS Agent、英文网页（`website/`）、安装脚本、测试和文档；不包含本机 Bot 地址、运行日志、虚拟环境或其他私人状态。旧版 v0.2.0 源码包保留供参考。
 
 ## 功能
 
@@ -15,7 +15,30 @@
 - 常驻 RELEASE H Agent.app 接收本地请求：先尝试已绑定 Bot 的按压，再在桌面解锁后执行窗口布局。
 - 支持 Bot 蓝牙扫描、MAC/UUID 绑定、单次按压及回执记录，无需 Hub。
 
-这是个人 Mac 自动化工具，目前通过命令行和本地 Agent 使用；独立 PWA 尚未实现。
+支持命令行和本地 Agent 使用；新版 Agent 另提供经过本机授权的网页连接和个人启动列表。网页源码位于完整源码包的 `website/`，完整工作流编辑器和通用下载安装包仍在规划中。
+
+## 网页启动现有工作流
+
+新版原生 Agent 启动时会启用仅监听 `127.0.0.1:8766` 的控制接口。当前只接受本机网页 `http://127.0.0.1:8765`；公开网站和手机异地访问尚未接入。
+
+1. 先完成下方本地构建及常驻 Agent 安装，并按需要授予 macOS 权限。
+2. 在源码包的 `website/` 目录中运行 `npm run preview`，用此 Mac 打开 `http://127.0.0.1:8765`。网页无第三方 npm 依赖，不需要先运行 npm install。
+3. 点击 **Connect Agent**，在原生确认框中核对网站地址并授权。授权本身不会启动工作流。
+4. 点击 **Start workflow**，运行已配置的工作流并查看对应请求的执行状态。**View demo** 只播放演示。
+
+会话凭据仅在 Agent 和页面内存中，闲置 30 分钟或总计 8 小时后过期。刷新网页需重新授权；Disconnect 撤销后续请求，已接受的任务可能继续执行。锁屏时已配置的 Bot 动作仍可能先执行，桌面操作等待解锁。
+
+网页只接收当前会话的粗粒度状态，不返回 Bot 地址、设备密钥、执行日志或个人路径。接口不接受任意终端命令；断线或结果未知时不会自动重发启动请求。
+
+### 自定义打开的应用、网站和项目
+
+连接并授权后，勾选 **Use my app selection instead of the full workflow**，选择需要打开的应用，填入最多五个公开 http/https 网站链接。支持 Music、Cursor、PyCharm、Visual Studio Code、Terminal、Notes、Codex、Claude、Chrome、Safari、Calendar 和 Reminders；应用需要预先安装。
+
+如需打开指定 PyCharm 项目，点击 **Choose project on Mac**，在原生文件夹选择框中选定项目目录。完整路径只保存在本机 Agent；网页仅收到已配置/未配置标记。点击 **Save selection on this Mac** 保存，之后 **Start workflow** 使用当前选项。刷新并重新授权会加载此 Mac 保存的启动列表。
+
+自定义模式不执行 Bot、分屏或默认番茄钟步骤；取消勾选即可执行原来的完整工作流。锁屏时自定义启动等待解锁。启动成功表示系统接受打开请求，不保证网页加载或 IDE 项目加载完毕。设置不会上传云端，也不写入浏览器持久存储。
+
+升级现有安装时，保留原项目的 `runtime/` 目录及绑定配置，在原项目更新经过审阅的源码再重建。新源码副本不包含你的设备绑定；不要为迁移而把 `runtime/` 加入 GitHub。构建出来的 App 依赖本机项目路径和 Python 环境，不能作为通用安装包公开分发。
 
 ## Benefits
 
@@ -115,10 +138,13 @@ Mac 醒着但锁屏时，Agent 可以尝试先执行蓝牙按压，桌面操作�
 - last-result.json：最近一次桌面工作流及硬件结果。
 - bot-attempts/：每个请求的硬件尝试记录。
 - agent.log：Agent 状态变化。
+- launch-preferences.json / launch-requests/：个人启动选项及请求快照，可能含私人网站链接或项目路径，只留在本机。
 
 等待请求会合并；执行过程中提交的新请求可保留到下一轮。队列只接受固定 start-work 动作，不接受任意 shell 命令。
 
 ## 验证与限制
+
+本次发布已通过 116 项 Python 测试、24 项网页测试及 JavaScript 语法检查。网页测试使用模拟蓝牙；应用打开、原生目录选择和硬件按压仍需用户在自己的设备上验证。
 
 ```sh
 PYTHONPATH=src python3 -m unittest discover -s tests -v
